@@ -63,7 +63,7 @@ contract Helios is ERC1155, Multicall {
     /// @dev tracks new LP ids
     uint256 public totalSupply;
     /// @dev tracks LP amount per id
-    mapping(uint256 => uint256) totalSupplyForId;
+    mapping(uint256 => uint256) public totalSupplyForId;
     /// @dev maps Helios LP to settings
     mapping(uint256 => Pair) public pairs;
     /// @dev internal mapping to check Helios LP settings
