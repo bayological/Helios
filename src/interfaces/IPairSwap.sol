@@ -8,15 +8,16 @@ interface IPairSwap {
         uint256 id,
         uint256 token0amount,
         uint256 token1amount
-    ) external returns (uint256 liq);
+    ) external virtual returns (uint256 liq);
 
     function removeLiquidity(uint256 id, uint256 liq)
         external
+        virtual
         returns (uint256 amount0out, uint256 amount1out);
 
     function swap(
         uint256 id,
         address tokenIn,
         uint256 amountIn
-    ) external returns (uint256 amountOut);
+    ) external virtual returns (uint256 amountOut);
 }

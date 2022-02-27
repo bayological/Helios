@@ -4,10 +4,11 @@ pragma solidity >=0.8.4;
 
 import "../libraries/math/SqrtMath.sol";
 import "../interfaces/IHelios.sol";
+import "../interfaces/IPairSwap.sol";
 
 /// @notice XYK swapper for Helios
 /// @author Modified from UniswapV2Pair (https://github.com/Uniswap/v2-core/blob/master/contracts/UniswapV2Pair.sol)
-contract XYKswapper {
+contract XYKswapper is IPairSwap {
     /// -----------------------------------------------------------------------
     /// Errors
     /// -----------------------------------------------------------------------
@@ -44,7 +45,7 @@ contract XYKswapper {
         uint256 id,
         uint256 token0amount,
         uint256 token1amount
-    ) public virtual returns (uint256 liq) {
+    ) public virtual override returns (uint256 liq) {
         IHelios.Pair memory pair = IHelios(msg.sender).pairs(id);
 
         uint256 reserve0 = pair.reserve0;
@@ -67,6 +68,7 @@ contract XYKswapper {
     function removeLiquidity(uint256 id, uint256 lp)
         public
         virtual
+        override
         returns (uint256 amount0out, uint256 amount1out)
     {
         IHelios.Pair memory pair = IHelios(msg.sender).pairs(id);
@@ -90,7 +92,7 @@ contract XYKswapper {
         uint256 id,
         address tokenIn,
         uint256 amountIn
-    ) public virtual returns (uint256 amountOut) {
+    ) public virtual override returns (uint256 amountOut) {
         IHelios.Pair memory pair = IHelios(msg.sender).pairs(id);
 
         uint256 reserve0 = pair.reserve0;

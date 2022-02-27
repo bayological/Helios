@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity 0.8.10;
+pragma solidity >=0.8.4;
 
 import {DSTest} from "ds-test/test.sol";
 import {Vm} from "forge-std/Vm.sol";
 import {console} from "log/console.sol";
-import {HeliosBS, Blacksmith, Helios, IPairSwap} from "./blacksmith/Helios.bs.sol";
+import {HeliosBS, Blacksmith, Helios} from "./blacksmith/Helios.bs.sol";
 import {XYKswapper} from "../swappers/XYKswapper.sol";
 import {ERC20BS} from "./blacksmith/ERC20.bs.sol";
 import {MockERC20} from "solmate/test/utils/mocks/MockERC20.sol";
@@ -13,7 +13,6 @@ contract HeliosTest is DSTest {
     Vm internal vm = Vm(HEVM_ADDRESS);
     Helios helios;
     XYKswapper xy;
-    IPairSwap ISwap;
     MockERC20 tokenA;
     MockERC20 tokenB;
     struct User {
@@ -41,7 +40,6 @@ contract HeliosTest is DSTest {
         tokenA = new MockERC20("TokenA", "A", 18);
         tokenB = new MockERC20("TokenB", "B", 18);
         xy = new XYKswapper();
-        ISwap = IPairSwap(address(xy));
         helios = new Helios();
         alice = createUser(address(0), 111);
         tokenA.mint(alice.addr, 1000 ether);
@@ -57,7 +55,7 @@ contract HeliosTest is DSTest {
             address(tokenB),
             100 ether,
             100 ether,
-            ISwap,
+            xy,
             0,
             "0x"
         );
