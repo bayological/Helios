@@ -5,11 +5,11 @@ pragma solidity >=0.8.4;
 /// @notice Swapper interface for Helios
 interface IHelios {
     struct Pair {
-        address token0; 
-        address token1; 
-        address swapper; 
-        uint112 reserve0; 
-        uint112 reserve1; 
+        address token0;
+        address token1;
+        address swapper;
+        uint112 reserve0;
+        uint112 reserve1;
         uint8 fee;
     }
 

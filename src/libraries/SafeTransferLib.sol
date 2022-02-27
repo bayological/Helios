@@ -46,8 +46,14 @@ library SafeTransferLib {
             let freeMemoryPointer := mload(0x40)
 
             // write the abi-encoded calldata to memory piece by piece:
-            mstore(freeMemoryPointer, 0xa9059cbb00000000000000000000000000000000000000000000000000000000) // begin with the function selector
-            mstore(add(freeMemoryPointer, 4), and(to, 0xffffffffffffffffffffffffffffffffffffffff)) // mask and append the "to" argument
+            mstore(
+                freeMemoryPointer,
+                0xa9059cbb00000000000000000000000000000000000000000000000000000000
+            ) // begin with the function selector
+            mstore(
+                add(freeMemoryPointer, 4),
+                and(to, 0xffffffffffffffffffffffffffffffffffffffff)
+            ) // mask and append the "to" argument
             mstore(add(freeMemoryPointer, 36), amount) // finally append the "amount" argument - no mask as it's a full 32 byte value
 
             // call the token and store if it succeeded or not
@@ -55,7 +61,8 @@ library SafeTransferLib {
             callStatus := call(gas(), token, 0, freeMemoryPointer, 68, 0, 0)
         }
 
-        if (!_didLastOptionalReturnCallSucceed(callStatus)) revert TransferFailed();
+        if (!_didLastOptionalReturnCallSucceed(callStatus))
+            revert TransferFailed();
     }
 
     function _safeTransferFrom(
@@ -71,9 +78,18 @@ library SafeTransferLib {
             let freeMemoryPointer := mload(0x40)
 
             // write the abi-encoded calldata to memory piece by piece:
-            mstore(freeMemoryPointer, 0x23b872dd00000000000000000000000000000000000000000000000000000000) // begin with the function selector
-            mstore(add(freeMemoryPointer, 4), and(from, 0xffffffffffffffffffffffffffffffffffffffff)) // mask and append the "from" argument
-            mstore(add(freeMemoryPointer, 36), and(to, 0xffffffffffffffffffffffffffffffffffffffff)) // mask and append the "to" argument
+            mstore(
+                freeMemoryPointer,
+                0x23b872dd00000000000000000000000000000000000000000000000000000000
+            ) // begin with the function selector
+            mstore(
+                add(freeMemoryPointer, 4),
+                and(from, 0xffffffffffffffffffffffffffffffffffffffff)
+            ) // mask and append the "from" argument
+            mstore(
+                add(freeMemoryPointer, 36),
+                and(to, 0xffffffffffffffffffffffffffffffffffffffff)
+            ) // mask and append the "to" argument
             mstore(add(freeMemoryPointer, 68), amount) // finally append the "amount" argument - no mask as it's a full 32 byte value
 
             // call the token and store if it succeeded or not
@@ -81,14 +97,19 @@ library SafeTransferLib {
             callStatus := call(gas(), token, 0, freeMemoryPointer, 100, 0, 0)
         }
 
-        if (!_didLastOptionalReturnCallSucceed(callStatus)) revert TransferFromFailed();
+        if (!_didLastOptionalReturnCallSucceed(callStatus))
+            revert TransferFromFailed();
     }
 
     /// -----------------------------------------------------------------------
     /// Internal helper logic
     /// -----------------------------------------------------------------------
 
-    function _didLastOptionalReturnCallSucceed(bool callStatus) internal pure returns (bool success) {
+    function _didLastOptionalReturnCallSucceed(bool callStatus)
+        internal
+        pure
+        returns (bool success)
+    {
         assembly {
             // get how many bytes the call returned
             let returnDataSize := returndatasize()
@@ -103,7 +124,6 @@ library SafeTransferLib {
             }
 
             switch returnDataSize
-            
             case 32 {
                 // copy the return data into memory
                 returndatacopy(0, 0, returnDataSize)
@@ -111,12 +131,10 @@ library SafeTransferLib {
                 // set success to whether it returned true
                 success := iszero(iszero(mload(0)))
             }
-
             case 0 {
                 // there was no return data
                 success := 1
             }
-
             default {
                 // it returned some malformed input
                 success := 0

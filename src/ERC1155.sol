@@ -45,7 +45,11 @@ abstract contract ERC1155 {
         uint256[] amounts
     );
 
-    event ApprovalForAll(address indexed owner, address indexed operator, bool approved);
+    event ApprovalForAll(
+        address indexed owner,
+        address indexed operator,
+        bool approved
+    );
 
     /// -----------------------------------------------------------------------
     /// Errors
@@ -84,7 +88,7 @@ abstract contract ERC1155 {
     /// -----------------------------------------------------------------------
     /// Constructor
     /// -----------------------------------------------------------------------
-    
+
     constructor() {
         INITIAL_CHAIN_ID = block.chainid;
         INITIAL_DOMAIN_SEPARATOR = _computeDomainSeparator();
@@ -132,16 +136,24 @@ abstract contract ERC1155 {
         uint256 amount,
         bytes memory data
     ) public virtual {
-        if (msg.sender != from && !isApprovedForAll[from][msg.sender]) revert InvalidOperator();
+        if (msg.sender != from && !isApprovedForAll[from][msg.sender])
+            revert InvalidOperator();
 
         balanceOf[from][id] -= amount;
         balanceOf[to][id] += amount;
 
         emit TransferSingle(msg.sender, from, to, id, amount);
 
-        if (to.code.length != 0 ? to == address(0) :
-            ERC1155TokenReceiver(to).onERC1155Received(msg.sender, from, id, amount, data) !=
-                ERC1155TokenReceiver.onERC1155Received.selector
+        if (
+            to.code.length != 0
+                ? to == address(0)
+                : ERC1155TokenReceiver(to).onERC1155Received(
+                    msg.sender,
+                    from,
+                    id,
+                    amount,
+                    data
+                ) != ERC1155TokenReceiver.onERC1155Received.selector
         ) revert InvalidReceiver();
     }
 
@@ -155,9 +167,10 @@ abstract contract ERC1155 {
         uint256 idsLength = ids.length; // saves MLOADs
 
         if (idsLength != amounts.length) revert ArrayParity();
-        if (msg.sender != from && !isApprovedForAll[from][msg.sender]) revert InvalidOperator();
+        if (msg.sender != from && !isApprovedForAll[from][msg.sender])
+            revert InvalidOperator();
 
-        for (uint256 i = 0; i < idsLength;) {
+        for (uint256 i = 0; i < idsLength; ) {
             uint256 id = ids[i];
             uint256 amount = amounts[i];
 
@@ -173,9 +186,16 @@ abstract contract ERC1155 {
 
         emit TransferBatch(msg.sender, from, to, ids, amounts);
 
-        if (to.code.length != 0 ? to == address(0) :
-            ERC1155TokenReceiver(to).onERC1155BatchReceived(msg.sender, from, ids, amounts, data) !=
-                ERC1155TokenReceiver.onERC1155BatchReceived.selector
+        if (
+            to.code.length != 0
+                ? to == address(0)
+                : ERC1155TokenReceiver(to).onERC1155BatchReceived(
+                    msg.sender,
+                    from,
+                    ids,
+                    amounts,
+                    data
+                ) != ERC1155TokenReceiver.onERC1155BatchReceived.selector
         ) revert InvalidReceiver();
     }
 
@@ -193,16 +213,25 @@ abstract contract ERC1155 {
         bytes32 s
     ) public virtual {
         if (block.timestamp > deadline) revert SigExpired();
-   
+
         // cannot realistically overflow on human timescales
         unchecked {
             bytes32 digest = keccak256(
                 abi.encodePacked(
-                    '\x19\x01',
+                    "\x19\x01",
                     DOMAIN_SEPARATOR(),
                     keccak256(
-                        abi.encode(keccak256('Permit(address owner,address operator,bool approved,uint256 nonce,uint256 deadline)'), 
-                        owner, operator, approved, nonces[owner]++, deadline))
+                        abi.encode(
+                            keccak256(
+                                "Permit(address owner,address operator,bool approved,uint256 nonce,uint256 deadline)"
+                            ),
+                            owner,
+                            operator,
+                            approved,
+                            nonces[owner]++,
+                            deadline
+                        )
+                    )
                 )
             );
 
@@ -217,16 +246,21 @@ abstract contract ERC1155 {
     }
 
     function DOMAIN_SEPARATOR() public view virtual returns (bytes32) {
-        return block.chainid == INITIAL_CHAIN_ID ? INITIAL_DOMAIN_SEPARATOR : _computeDomainSeparator();
+        return
+            block.chainid == INITIAL_CHAIN_ID
+                ? INITIAL_DOMAIN_SEPARATOR
+                : _computeDomainSeparator();
     }
 
     function _computeDomainSeparator() internal view virtual returns (bytes32) {
-        return 
+        return
             keccak256(
                 abi.encode(
-                    keccak256('EIP712Domain(string name,string version,uint256 chainId,address verifyingContract)'),
+                    keccak256(
+                        "EIP712Domain(string name,string version,uint256 chainId,address verifyingContract)"
+                    ),
                     keccak256(bytes(name)),
-                    bytes('1'),
+                    bytes("1"),
                     block.chainid,
                     address(this)
                 )
@@ -237,7 +271,12 @@ abstract contract ERC1155 {
     /// ERC-165 logic
     /// -----------------------------------------------------------------------
 
-    function supportsInterface(bytes4 interfaceId) public pure virtual returns (bool) {
+    function supportsInterface(bytes4 interfaceId)
+        public
+        pure
+        virtual
+        returns (bool)
+    {
         return
             interfaceId == 0x01ffc9a7 || // ERC-165 Interface ID for ERC-165
             interfaceId == 0xd9b67a26 || // ERC-165 Interface ID for ERC-1155
@@ -258,9 +297,16 @@ abstract contract ERC1155 {
 
         emit TransferSingle(msg.sender, address(0), to, id, amount);
 
-        if (to.code.length != 0 ? to == address(0) :
-            ERC1155TokenReceiver(to).onERC1155Received(msg.sender, address(0), id, amount, data) !=
-                ERC1155TokenReceiver.onERC1155Received.selector
+        if (
+            to.code.length != 0
+                ? to == address(0)
+                : ERC1155TokenReceiver(to).onERC1155Received(
+                    msg.sender,
+                    address(0),
+                    id,
+                    amount,
+                    data
+                ) != ERC1155TokenReceiver.onERC1155Received.selector
         ) revert InvalidReceiver();
     }
 
@@ -274,7 +320,7 @@ abstract contract ERC1155 {
 
         if (idsLength != amounts.length) revert ArrayParity();
 
-        for (uint256 i = 0; i < idsLength;) {
+        for (uint256 i = 0; i < idsLength; ) {
             balanceOf[to][ids[i]] += amounts[i];
 
             // an array can't have a total length
@@ -286,9 +332,16 @@ abstract contract ERC1155 {
 
         emit TransferBatch(msg.sender, address(0), to, ids, amounts);
 
-        if (to.code.length != 0 ? to == address(0) :
-            ERC1155TokenReceiver(to).onERC1155BatchReceived(msg.sender, address(0), ids, amounts, data) !=
-                ERC1155TokenReceiver.onERC1155Received.selector
+        if (
+            to.code.length != 0
+                ? to == address(0)
+                : ERC1155TokenReceiver(to).onERC1155BatchReceived(
+                    msg.sender,
+                    address(0),
+                    ids,
+                    amounts,
+                    data
+                ) != ERC1155TokenReceiver.onERC1155Received.selector
         ) revert InvalidReceiver();
     }
 
@@ -311,7 +364,7 @@ abstract contract ERC1155 {
 
         if (idsLength != amounts.length) revert ArrayParity();
 
-        for (uint256 i = 0; i < idsLength;) {
+        for (uint256 i = 0; i < idsLength; ) {
             balanceOf[from][ids[i]] -= amounts[i];
 
             // an array can't have a total length

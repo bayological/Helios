@@ -6,7 +6,7 @@ pragma solidity >=0.8.4;
 /// @author Modified from Solmate (https://github.com/Rari-Capital/solmate/blob/main/src/utils/ReentrancyGuard.sol)
 abstract contract ReentrancyGuard {
     error Reentrancy();
-    
+
     uint256 private locked = 1;
 
     modifier nonReentrant() {
