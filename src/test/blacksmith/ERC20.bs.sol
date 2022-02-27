@@ -9,8 +9,12 @@ contract ERC20BS {
     address addr;
     uint256 privateKey;
     address payable target;
-    
-    constructor( address _addr, uint256 _privateKey, address _target) {
+
+    constructor(
+        address _addr,
+        uint256 _privateKey,
+        address _target
+    ) {
         addr = _privateKey == 0 ? _addr : bsvm.addr(_privateKey);
         privateKey = _privateKey;
         target = payable(_target);
@@ -21,40 +25,51 @@ contract ERC20BS {
         _;
     }
 
-    function allowance(address arg0, address arg1) public prank returns (uint256) {
-        return ERC20(target).allowance(arg0, arg1);
+    function allowance(address owner, address spender)
+        public
+        prank
+        returns (uint256)
+    {
+        return ERC20(target).allowance(owner, spender);
     }
 
-	function approve(address to, uint256 amount) public prank returns (bool) {
-        return ERC20(target).approve(to, amount);
+    function approve(address spender, uint256 amount)
+        public
+        prank
+        returns (bool)
+    {
+        return ERC20(target).approve(spender, amount);
     }
 
-	function balanceOf(address arg0) public prank returns (uint256) {
-        return ERC20(target).balanceOf(arg0);
+    function balanceOf(address account) public prank returns (uint256) {
+        return ERC20(target).balanceOf(account);
     }
 
-	function decimals() public prank returns (uint8) {
+    function decimals() public prank returns (uint8) {
         return ERC20(target).decimals();
     }
 
-	function name() public prank returns (string memory) {
+    function name() public prank returns (string memory) {
         return ERC20(target).name();
     }
 
-	function symbol() public prank returns (string memory) {
+    function symbol() public prank returns (string memory) {
         return ERC20(target).symbol();
     }
 
-	function totalSupply() public prank returns (uint256) {
+    function totalSupply() public prank returns (uint256) {
         return ERC20(target).totalSupply();
     }
 
-	function transfer(address to, uint256 amount) public prank returns (bool) {
+    function transfer(address to, uint256 amount) public prank returns (bool) {
         return ERC20(target).transfer(to, amount);
     }
 
-	function transferFrom(address from, address to, uint256 amount) public prank returns (bool) {
+    function transferFrom(
+        address from,
+        address to,
+        uint256 amount
+    ) public prank returns (bool) {
         return ERC20(target).transferFrom(from, to, amount);
     }
-
 }

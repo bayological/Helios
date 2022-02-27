@@ -1,3 +1,5 @@
-solmate/=lib/solmate/src/
-ds-test/=lib/ds-test/src/
-weird-erc20/=lib/solmate/lib/weird-erc20/src/
+forge-std/=/Users/stevennevins/Documents/fractional/Helios/lib/forge-std/src/
+log/=/Users/stevennevins/Documents/fractional/Helios/lib/log/src/
+solmate/=/Users/stevennevins/Documents/fractional/Helios/lib/solmate/src/
+ds-test/=/Users/stevennevins/Documents/fractional/Helios/lib/ds-test/src/
+weird-erc20/=/Users/stevennevins/Documents/fractional/Helios/lib/solmate/lib/weird-erc20/src/
