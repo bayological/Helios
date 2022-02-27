@@ -297,7 +297,7 @@ abstract contract ERC1155 {
 
         emit TransferSingle(msg.sender, address(0), to, id, amount);
 
-        if (
+        /*if (
             to.code.length != 0
                 ? to == address(0)
                 : ERC1155TokenReceiver(to).onERC1155Received(
@@ -308,6 +308,7 @@ abstract contract ERC1155 {
                     data
                 ) != ERC1155TokenReceiver.onERC1155Received.selector
         ) revert InvalidReceiver();
+        */
     }
 
     function _batchMint(
