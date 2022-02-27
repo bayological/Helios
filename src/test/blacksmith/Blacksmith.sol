@@ -15,7 +15,6 @@ interface Bsvm {
             bytes32 r,
             bytes32 s
         );
-        
 }
 
 contract Blacksmith {
@@ -48,7 +47,10 @@ contract Blacksmith {
         prank
         returns (bytes memory)
     {
-        require(_address.balance >= msg.value, "BS ERROR : Insufficient balance");
+        require(
+            _address.balance >= msg.value,
+            "BS ERROR : Insufficient balance"
+        );
         (bool success, bytes memory data) = _addr.call{value: msg.value}(
             _calldata
         );
