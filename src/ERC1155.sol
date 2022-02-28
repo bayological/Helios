@@ -296,6 +296,18 @@ abstract contract ERC1155 {
         balanceOf[to][id] += amount;
 
         emit TransferSingle(msg.sender, address(0), to, id, amount);
+        require(
+            to.code.length == 0
+                ? to != address(0)
+                : ERC1155TokenReceiver(to).onERC1155Received(
+                    msg.sender,
+                    address(0),
+                    id,
+                    amount,
+                    data
+                ) == ERC1155TokenReceiver.onERC1155Received.selector,
+            "UNSAFE_RECIPIENT"
+        );
 
         /*if (
             to.code.length != 0
