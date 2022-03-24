@@ -9,6 +9,18 @@ Math is handled by external helper contracts called `swapper`.
 
 Currently, pairs are supported. Can use raw ETH too.
 
+## Local Development & testing
+
+To install dependencies:
+```sh
+forge install
+```
+
+To run tests:
+```sh
+forge test
+```
+
 ## Contributors
 
 ⭐ [@therealNemani](https://twitter.com/therealNemani)
