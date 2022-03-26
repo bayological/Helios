@@ -8,6 +8,8 @@ interface Bsvm {
 
     function startPrank(address sender, address origin) external;
 
+    function expectRevert(bytes calldata data) external;
+
     function sign(uint256 privateKey, bytes32 digest)
         external
         returns (
@@ -39,6 +41,10 @@ contract Blacksmith {
 
     function deal(uint256 _amount) public {
         bsvm.deal(_address, _amount);
+    }
+
+    function expectRevert(bytes calldata data) public {
+        bsvm.expectRevert(data);
     }
 
     function call(address _addr, bytes memory _calldata)
